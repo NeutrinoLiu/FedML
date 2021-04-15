@@ -3,7 +3,8 @@ import numpy as np
 
 from fedml_api.standalone.hierarchical_fl.group import Group
 from fedml_api.standalone.hierarchical_fl.client import Client
-from fedml_api.standalone.fedavg.fedavg_trainer import FedAvgTrainer
+#from fedml_api.standalone.fedavg.fedavg_trainer import FedAvgTrainer
+from fedml_api.distributed.fedavg.FedAVGTrainer import FedAVGTrainer as FedAvgTrainer
 
 class Trainer(FedAvgTrainer):
 
