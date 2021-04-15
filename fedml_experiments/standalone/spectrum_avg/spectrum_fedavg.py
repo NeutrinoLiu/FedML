@@ -10,19 +10,18 @@ import wandb
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.getcwd(), "../../../")))
 
-
 ## data
 from fedml_api.data_preprocessing.FederatedEMNIST.data_loader import load_partition_data_federated_emnist
 from fedml_api.data_preprocessing.MNIST.data_loader import load_partition_data_mnist
 
 # TODO: implement data_loader
-# fedml_api.data_preprocessing.spectrum.data_loader import load_partition_data_spectrum
+from fedml_api.data_preprocessing.spectrum.data_loader import load_partition_data_spectrum
 
 ## model
 from fedml_api.model.linear.lr import LogisticRegression
 
 # TODO: implement model
-# from fedml_api.model.spectrum.fnn import FeedforwardNN
+from fedml_api.model.spectrum.fnn import FeedforwardNN
 
 ## system
 from fedml_api.standalone.fedavg.fedavg_api import FedAvgAPI
