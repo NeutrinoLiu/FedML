@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 import torch.optim as optim
 
-import ploter
+import myUtils
 
 EPOCH_NUM = 2
 TRAIN_PATH = "GPS-power.dat"
@@ -35,8 +35,8 @@ class getDataSet(torch.utils.data.Dataset):
     
     def __getitem__(self, index):
         row = self.rawlist[index].split(" ")
-        lati = float(row[0])
-        longi = float(row[1])
+        lati = myUtils.ux(float(row[0]))        # normalization is a must here, or nothing get learnt 
+        longi = myUtils.uy(float(row[1]))
         power = float(row[2])
         gps_tensor = torch.tensor([lati, longi])
         power_tensor = torch.tensor([power])
@@ -47,13 +47,13 @@ class getDataSet(torch.utils.data.Dataset):
 
 # dataset init
 trainset = getDataSet(TRAIN_PATH) 
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=4, shuffle = True, num_workers=15) # i7 with 16 cores so use 15 dataloader worker
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=10, shuffle = True, num_workers=15) # i7 with 16 cores so use 15 dataloader worker
 
 # training
 fnn = FNN()
 lossFunc = nn.MSELoss() # min square err
 
-optimizer = optim.SGD(fnn.parameters(), lr = 0.001, momentum = 0) # do not use SGD currently
+optimizer = optim.SGD(fnn.parameters(), lr = 0.0001, momentum = 0) # do not use SGD currently
 
 for epoch in range(EPOCH_NUM):
 
@@ -61,7 +61,6 @@ for epoch in range(EPOCH_NUM):
     for i, data in enumerate(trainloader, 0):
         inputs, truth = data
         optimizer.zero_grad()
-
         outputs = fnn(inputs)
         loss = lossFunc(outputs, truth)
         loss.backward()
@@ -70,10 +69,11 @@ for epoch in range(EPOCH_NUM):
         avg_loss_per100 += loss.item()
         if i % 100 == 99:
             print(f"[epoch {epoch+1}][avg loss for 100 batches before {i+1}] {avg_loss_per100/100}")
+            # print(f"groundTruth is {truth}, prediction is {outputs} ")
             avg_loss_per100 = 0.0
 
-for paras in fnn.named_parameters():
-    print(paras)
+# for paras in fnn.named_parameters():
+#     print(paras)
 
 print("Training done!")
-ploter.visFNN(fnn)
+myUtils.visFNN(fnn)

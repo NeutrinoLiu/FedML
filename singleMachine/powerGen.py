@@ -15,6 +15,8 @@ xmin = 100.0
 xmax = 0.0
 ymin = 0.0
 ymax = -100.0
+zmin = 0.0
+zmax = -100.0
 
 for row in f.readlines():
     dataList = row.split(" ")
@@ -26,8 +28,10 @@ for row in f.readlines():
     ymin = min(ymin, float(longi))
     ymax = max(ymax, float(longi))
     fw.write(lati + ' ' + longi + ' ' + str(power) + '\n')
+    zmin = min(zmin, power)
+    zmax = max(zmax, power)
 
-print(f"lati:{xmin}~{xmax}, longi:{ymin}~{ymax}")
+print(f"lati:{xmin}~{xmax}, longi:{ymin}~{ymax}, power:{zmin}~{zmax}")
 fw.close()
 f.close()
 

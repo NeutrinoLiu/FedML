@@ -2,15 +2,29 @@ import matplotlib.pyplot as plt
 import torch
 import numpy as np
 
+# range of the whole data set
 xs = 42.987581077
 xe = 43.158151564
 ys = -89.564388659
 ye = -89.260479204
 
-# xs = 43.064
-# xe = 43.076
-# ys = -89.45
-# ye = -89.39
+# range of the visualization (interests)
+xs_in = 42.987581077
+xe_in = 43.158151564
+ys_in = -89.564388659
+ye_in = -89.260479204
+
+# xs_in = 43.064
+# xe_in = 43.076
+# ys_in = -89.45
+# ye_in = -89.39
+
+
+def ux(raw):
+    return (raw - xs) / (xe - xs) * 2 -1 
+
+def uy(raw):
+    return (raw - ys) / (ye - ys) * 2 -1
 
 resx = 100
 resy = 200
@@ -19,9 +33,9 @@ mapvalue = np.empty((resx, resy))
 def visFNN(fnn):
     for i in range(resx):
         for j in range(resy):
-            xx = xs + (xe-xs)/resx * i
-            yy = ys + (ye-ys)/resy * j
-            inputs = torch.tensor([xx, yy])
+            xx = xs_in + (xe_in-xs_in)/resx * i
+            yy = ys_in + (ye_in-ys_in)/resy * j
+            inputs = torch.tensor([ux(xx), uy(yy)])
             outputs = fnn(inputs)
             zz = outputs.item()
             mapvalue[i,j] = zz 
