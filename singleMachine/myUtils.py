@@ -39,22 +39,29 @@ def uy(raw, type = 0):
 
 resx = 100
 resy = 200
-mapvalue = np.empty((resx, resy))
 
 def visFNN(fnn):
+    cord_x = np.empty((resx, resy))
+    cord_y =np.empty((resx, resy))
+    mapvalue = np.empty((resx, resy))
     for i in range(resx):
+        xx = xs_in + (xe_in-xs_in)/resx * i
         for j in range(resy):
-            xx = xs_in + (xe_in-xs_in)/resx * i
             yy = ys_in + (ye_in-ys_in)/resy * j
-            inputs = torch.tensor([ux(xx), uy(yy)])
+            cord_x[i,j] = xx
+            cord_y[i,j] = yy
+            inputs = torch.tensor([ux(xx,1), uy(yy,1)])
             outputs = fnn(inputs)
             zz = outputs.item()
             mapvalue[i,j] = zz 
-            if (i %20 == 0 ) & (j%20 == 0):
-                print(f"[{format(xx, '.11f')},{format(yy, '.11f')}]:\t{zz}")
-    plt.pcolormesh(mapvalue, cmap = "plasma")
-    #plt.pcolormesh(mapvalue, cmap = "summer")
-    plt.show()
+            # if (i %20 == 0 ) & (j%20 == 0):
+            #     print(f"[{format(xx, '.11f')},{format(yy, '.11f')}]:\t{zz}")
+    plt.figure(figsize=(9,3))
+    plt.pcolormesh(cord_y,cord_x,mapvalue, cmap = "plasma", shading='auto')
+    plt.colorbar()
+    #plt.show()
+    plt.savefig('heatmap.png', bbox_inches='tight')
+
 
 # FILE_NAME = "GPS-power.dat"
 # f = open(FILE_NAME, "r")

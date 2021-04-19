@@ -26,7 +26,7 @@ wandb
 # data
 *.rar
 *.csv
-*.dat
+#*.dat
 cifar-10-batches-py
 *.tar.gz
 *.png

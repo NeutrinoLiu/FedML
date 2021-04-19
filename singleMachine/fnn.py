@@ -8,6 +8,7 @@ import myUtils
 
 EPOCH_NUM = 2
 TRAIN_PATH = "GPS-power.dat"
+LOSS_PRINT_PER = 500
 
 class FNN(nn.Module):
 
@@ -59,7 +60,7 @@ optimizer = optim.SGD(fnn.parameters(), lr = 0.001, momentum = 0) # do not use S
 
 for epoch in range(EPOCH_NUM):
 
-    avg_loss_per100 = 0.0 
+    avg_loss_per = 0.0 
     for i, data in enumerate(trainloader, 0):
         inputs, truth = data
         optimizer.zero_grad()
@@ -68,11 +69,11 @@ for epoch in range(EPOCH_NUM):
         loss.backward()
         optimizer.step()
 
-        avg_loss_per100 += loss.item()
-        if i % 100 == 99:
-            print(f"[epoch {epoch+1}][avg loss for 100 batches before {i+1}] {avg_loss_per100/100}")
+        avg_loss_per += loss.item()
+        if i % LOSS_PRINT_PER == LOSS_PRINT_PER-1:
+            print(f"[epoch {epoch+1}][avg loss for {LOSS_PRINT_PER} batches before {i+1}] {avg_loss_per/LOSS_PRINT_PER}")
             # print(f"groundTruth is {truth}, prediction is {outputs} ")
-            avg_loss_per100 = 0.0
+            avg_loss_per = 0.0
 
 # for paras in fnn.named_parameters():
 #     print(paras)
