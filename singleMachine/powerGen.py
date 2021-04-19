@@ -19,6 +19,7 @@ zmin = 0.0
 zmax = -100.0
 xavg = 0.0
 yavg = 0.0
+zavg = 0.0
 
 lines = f.readlines()
 for row in lines:
@@ -35,22 +36,28 @@ for row in lines:
     fw.write(lati + ' ' + longi + ' ' + str(power) + '\n')
     zmin = min(zmin, power)
     zmax = max(zmax, power)
+    zavg += power
 
 xavg = xavg/len(lines)
 yavg = yavg/len(lines)
+zavg = zavg/len(lines)
 xsd = 0.0
 ysd = 0.0
+zsd = 0.0
 for row in lines:
     dataList = row.split(" ")
     lati = float(dataList[0])
     longi = float(dataList[1])
+    power = cal_total_power(np.array(list(map(float, dataList))), 2, len(dataList))
     xsd += (lati-xavg)**2
     ysd += (longi-yavg)**2
+    zsd += (power-zavg)**2
 
 xsd = (xsd/len(lines))**0.5
 ysd = (ysd/len(lines))**0.5
+zsd = (zsd/len(lines))**0.5
 
-print(f"lati:{xmin}~{xmax} [avg:{xavg}, sd:{xsd}], longi:{ymin}~{ymax} [avg:{yavg}, sd:{ysd}], power:{zmin}~{zmax}")
+print(f"lati:{xmin}~{xmax} [avg:{xavg}, sd:{xsd}], longi:{ymin}~{ymax} [avg:{yavg}, sd:{ysd}], power:{zmin}~{zmax} [avg:{zavg}, sd:{zsd}]")
 fw.close()
 f.close()
 

@@ -6,7 +6,7 @@ import torch.optim as optim
 
 import myUtils
 
-EPOCH_NUM = 2
+EPOCH_NUM = 10
 TRAIN_PATH = "GPS-power.dat"
 LOSS_PRINT_PER = 500
 
@@ -18,7 +18,7 @@ class FNN(nn.Module):
         # input of network is a size2 feature(latitude, longitude)
         self.hl1 = nn.Linear(2,50)  # hiddenlayer 1 
         self.hl2 = nn.Linear(50,50) # hiddenlayer 2
-        self.hl3 = nn.Linear(50,50) # hiddenlayer 2
+        self.hl3 = nn.Linear(50,50) # hiddenlayer 3
         self.ol = nn.Linear(50,1)   # outputlayer
 
     # parameter-irrelative operation is recommended as function
@@ -26,7 +26,7 @@ class FNN(nn.Module):
         x = F.relu(self.hl1(x))
         x = F.relu(self.hl2(x))
         x = F.relu(self.hl3(x))
-        x= self.ol(x)
+        x = self.ol(x)
         return x
 
 class getDataSet(torch.utils.data.Dataset):
@@ -40,7 +40,7 @@ class getDataSet(torch.utils.data.Dataset):
         row = self.rawlist[index].split(" ")
         lati = myUtils.ux(float(row[0]),1)          # normalization/standardization is a must here, or nothing get learnt 
         longi = myUtils.uy(float(row[1]),1)         # 
-        power = float(row[2])
+        power = myUtils.uz(float(row[2]),1)
         gps_tensor = torch.tensor([lati, longi])
         power_tensor = torch.tensor([power])
         return gps_tensor, power_tensor
@@ -56,7 +56,7 @@ trainloader = torch.utils.data.DataLoader(trainset, batch_size=10, shuffle = Tru
 fnn = FNN()
 lossFunc = nn.MSELoss() # min square err
 
-optimizer = optim.SGD(fnn.parameters(), lr = 0.001, momentum = 0) # do not use SGD currently
+optimizer = optim.Adam(fnn.parameters(), lr = 0.001) # do not use SGD currently
 
 for epoch in range(EPOCH_NUM):
 
@@ -71,7 +71,8 @@ for epoch in range(EPOCH_NUM):
 
         avg_loss_per += loss.item()
         if i % LOSS_PRINT_PER == LOSS_PRINT_PER-1:
-            print(f"[epoch {epoch+1}][avg loss for {LOSS_PRINT_PER} batches before {i+1}] {avg_loss_per/LOSS_PRINT_PER}")
+            avg_loss_per = avg_loss_per/LOSS_PRINT_PER
+            print(f"[epoch {epoch+1}][avg loss for {LOSS_PRINT_PER} batches before {i+1}] {avg_loss_per}({myUtils.zsd**2 * avg_loss_per})")
             # print(f"groundTruth is {truth}, prediction is {outputs} ")
             avg_loss_per = 0.0
 
@@ -80,3 +81,4 @@ for epoch in range(EPOCH_NUM):
 
 print("Training done!")
 myUtils.visFNN(fnn)
+myUtils.visFNN_small(fnn)
