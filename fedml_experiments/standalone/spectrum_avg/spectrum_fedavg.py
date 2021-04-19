@@ -155,7 +155,7 @@ def create_model(args, model_name, output_dim):
     if model_name == "lr" and args.dataset == "mnist":
         logging.info("LogisticRegression + MNIST")
         model = LogisticRegression(28 * 28, output_dim)
-    elif model_name == "FNN_2_50_50_1":
+    elif model_name == "fnn":
         pass # TODO: implement fnn model
     return model
 

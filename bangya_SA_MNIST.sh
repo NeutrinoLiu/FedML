@@ -24,11 +24,11 @@ cd ./fedml_experiments/standalone/fedavg
 
 # assert that, for full batch and epochs=1, the accuracy of federated training(FedAvg) is equal to that of centralized training
 echo "--------- start centralized training ----------"
-sh run_fedavg_standalone_pytorch.sh 0 1 1 -1 mnist ./../../../data/mnist lr hetero 10 1 0.03 sgd 0
+sh run_fedavg_standalone_pytorch.sh 0 1 1 61664  mnist ./../../../data/mnist lr hetero 1 1 0.03 sgd 0
 centralized_full_train_acc=$(cat wandb/latest-run/files/wandb-summary.json | python -c "import sys, json; print(json.load(sys.stdin)['Train/Acc'])")
 
 echo "---------- start federated training -----------"
-sh run_fedavg_standalone_pytorch.sh 0 1000 1000 -1 mnist ./../../../data/mnist lr hetero 10 1 0.03 sgd 0
+sh run_fedavg_standalone_pytorch.sh 0 1000 1000 -1 mnist ./../../../data/mnist lr hetero 1 1 0.03 sgd 0
 federated_full_train_acc=$(cat wandb/latest-run/files/wandb-summary.json | python -c "import sys, json; print(json.load(sys.stdin)['Train/Acc'])")
 
 assert_eq $(round $centralized_full_train_acc 3) $(round $federated_full_train_acc 3)
