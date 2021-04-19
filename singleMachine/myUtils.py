@@ -5,8 +5,13 @@ import numpy as np
 # range of the whole data set
 xs = 42.987581077
 xe = 43.158151564
+xavg = 43.07850074790703
+xsd = 0.026930841086101193
 ys = -89.564388659
 ye = -89.260479204
+yavg = -89.3982621182465
+ysd = 0.060267757907425355
+
 
 # range of the visualization (interests)
 xs_in = 42.987581077
@@ -20,11 +25,17 @@ ye_in = -89.260479204
 # ye_in = -89.39
 
 
-def ux(raw):
-    return (raw - xs) / (xe - xs) * 2 -1 
+def ux(raw, type = 0):
+    if type == 1:   
+        return (raw - xavg) / xsd
+    else:
+        return (raw - xs) / (xe - xs) * 2 -1
 
-def uy(raw):
-    return (raw - ys) / (ye - ys) * 2 -1
+def uy(raw, type = 0):
+    if type == 1:   
+        return (raw - yavg) / ysd
+    else:
+        return (raw - ys) / (ye - ys) * 2 -1
 
 resx = 100
 resy = 200

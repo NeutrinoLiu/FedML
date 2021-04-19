@@ -17,12 +17,14 @@ class FNN(nn.Module):
         # input of network is a size2 feature(latitude, longitude)
         self.hl1 = nn.Linear(2,50)  # hiddenlayer 1 
         self.hl2 = nn.Linear(50,50) # hiddenlayer 2
+        self.hl3 = nn.Linear(50,50) # hiddenlayer 2
         self.ol = nn.Linear(50,1)   # outputlayer
 
     # parameter-irrelative operation is recommended as function
     def forward(self, x): # x is the size2 input
         x = F.relu(self.hl1(x))
         x = F.relu(self.hl2(x))
+        x = F.relu(self.hl3(x))
         x= self.ol(x)
         return x
 
@@ -35,8 +37,8 @@ class getDataSet(torch.utils.data.Dataset):
     
     def __getitem__(self, index):
         row = self.rawlist[index].split(" ")
-        lati = myUtils.ux(float(row[0]))        # normalization is a must here, or nothing get learnt 
-        longi = myUtils.uy(float(row[1]))
+        lati = myUtils.ux(float(row[0]),1)          # normalization/standardization is a must here, or nothing get learnt 
+        longi = myUtils.uy(float(row[1]),1)         # 
         power = float(row[2])
         gps_tensor = torch.tensor([lati, longi])
         power_tensor = torch.tensor([power])
@@ -53,7 +55,7 @@ trainloader = torch.utils.data.DataLoader(trainset, batch_size=10, shuffle = Tru
 fnn = FNN()
 lossFunc = nn.MSELoss() # min square err
 
-optimizer = optim.SGD(fnn.parameters(), lr = 0.0001, momentum = 0) # do not use SGD currently
+optimizer = optim.SGD(fnn.parameters(), lr = 0.001, momentum = 0) # do not use SGD currently
 
 for epoch in range(EPOCH_NUM):
 
