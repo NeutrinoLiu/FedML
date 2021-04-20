@@ -12,14 +12,23 @@ def read_data(train_data_dir, test_data_dir):
         keys 'users' and 'user_data'
     - the set of train set users is the same as the set of test set users
 
+    {
+        "num_samples": [...int]
+        "users": [...string]
+        "user_data": {
+            "user_name": {
+                "y": [...float]
+                "x": [...[float]]
+            }
+        }
+    }
+
     Return:
         clients: list of non-unique client ids
-        groups: list of group ids; empty list if none found
         train_data: dictionary of train data
         test_data: dictionary of test data
     '''
     clients = []
-    groups = []
     train_data = {}
     test_data = {}
 
@@ -30,8 +39,6 @@ def read_data(train_data_dir, test_data_dir):
         with open(file_path, 'r') as inf:
             cdata = json.load(inf)
         clients.extend(cdata['users'])
-        if 'hierarchies' in cdata:
-            groups.extend(cdata['hierarchies'])
         train_data.update(cdata['user_data'])
 
     test_files = os.listdir(test_data_dir)
@@ -44,7 +51,7 @@ def read_data(train_data_dir, test_data_dir):
 
     clients = sorted(cdata['users'])
 
-    return clients, groups, train_data, test_data
+    return clients, train_data, test_data
 
 
 def batch_data(data, batch_size):
@@ -75,19 +82,20 @@ def batch_data(data, batch_size):
 def load_partition_data_spectrum(batch_size,
                               train_path="./../../../data/spectrum/train",
                               test_path="./../../../data/spectrum/test"):
-    users, groups, train_data, test_data = read_data(train_path, test_path)
+    users, train_data, test_data = read_data(train_path, test_path)
 
-    if len(groups) == 0:
-        groups = [None for _ in users]
+    # total size of dataset
     train_data_num = 0
     test_data_num = 0
+    # local set dict user:dataset
     train_data_local_dict = dict()
     test_data_local_dict = dict()
     train_data_local_num_dict = dict()
+    # total list of dataset
     train_data_global = list()
     test_data_global = list()
     client_idx = 0
-    for u, g in zip(users, groups):
+    for u in users:
         user_train_data_num = len(train_data[u]['x'])
         user_test_data_num = len(test_data[u]['x'])
         train_data_num += user_train_data_num
@@ -105,7 +113,14 @@ def load_partition_data_spectrum(batch_size,
         test_data_global += test_batch
         client_idx += 1
     client_num = client_idx
-    class_num = 10
+    print(f"[dataloader]\tthere are {client_num} workers in this dataset")
 
-    return client_num, train_data_num, test_data_num, train_data_global, test_data_global, \
-           train_data_local_num_dict, train_data_local_dict, test_data_local_dict, class_num
+    # we are not a class problem, and only 1 output
+    class_num = 1
+
+    return  client_num, \
+            train_data_num, test_data_num, \
+            train_data_global, test_data_global, \
+            train_data_local_num_dict, \
+            train_data_local_dict, test_data_local_dict, \
+            class_num
