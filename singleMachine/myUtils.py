@@ -3,14 +3,17 @@ import torch
 import numpy as np
 
 # range of the whole data set
+# lati
 xs = 42.987581077
 xe = 43.158151564
 xavg = 43.07850074790703
 xsd = 0.026930841086101193
+# longi
 ys = -89.564388659
 ye = -89.260479204
 yavg = -89.3982621182465
 ysd = 0.060267757907425355
+# power
 zs = -86.24192241578515
 ze = -27.31659193737493
 zavg = -58.52785514280172
@@ -40,10 +43,16 @@ def de_uz(raw, type = 0):
     else:
         return (raw +1)/ 2 * (ze - zs) + zs
 
+def de_proc(loss, type = 0):
+    if type == 1:
+        return zsd**2 * loss
+    else:
+        return loss * (ze-zs)**2 / 4
+
 resx = 100
 resy = 200
 
-def visFNN(fnn):
+def visFNN(fnn, pp_type = 0): # preprocess mode: 0-norm 1-stand
 # range of the visualization (interests)
     xs_in = 42.987581077
     xe_in = 43.158151564
@@ -58,10 +67,10 @@ def visFNN(fnn):
             yy = ys_in + (ye_in-ys_in)/resy * j
             cord_x[i,j] = xx
             cord_y[i,j] = yy
-            inputs = torch.tensor([ux(xx,1), uy(yy,1)])
+            inputs = torch.tensor([ux(xx,pp_type), uy(yy,pp_type)])
             outputs = fnn(inputs)
             zz = outputs.item()
-            mapvalue[i,j] = de_uz(zz,1)
+            mapvalue[i,j] = de_uz(zz,pp_type)
             # if (i %20 == 0 ) & (j%20 == 0):
             #     print(f"[{format(xx, '.11f')},{format(yy, '.11f')}]:\t{zz}")
     plt.figure(figsize=(9,3))
@@ -70,7 +79,7 @@ def visFNN(fnn):
     #plt.show()
     plt.savefig('heatmap.png', bbox_inches='tight')
 
-def visFNN_small(fnn):
+def visFNN_small(fnn, pp_type = 0):
 # range of the visualization (interests)
     xs_in = 43.064
     xe_in = 43.076
@@ -85,10 +94,10 @@ def visFNN_small(fnn):
             yy = ys_in + (ye_in-ys_in)/resy * j
             cord_x[i,j] = xx
             cord_y[i,j] = yy
-            inputs = torch.tensor([ux(xx,1), uy(yy,1)])
+            inputs = torch.tensor([ux(xx,pp_type), uy(yy,pp_type)])
             outputs = fnn(inputs)
             zz = outputs.item()
-            mapvalue[i,j] = de_uz(zz,1)
+            mapvalue[i,j] = de_uz(zz,pp_type)
             # if (i %20 == 0 ) & (j%20 == 0):
             #     print(f"[{format(xx, '.11f')},{format(yy, '.11f')}]:\t{zz}")
     plt.figure(figsize=(9,3))
