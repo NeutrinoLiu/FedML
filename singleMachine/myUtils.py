@@ -2,6 +2,9 @@ import matplotlib.pyplot as plt
 import torch
 import numpy as np
 
+import random
+import string
+
 # range of the whole data set
 # lati
 xs = 42.987581077
@@ -77,7 +80,8 @@ def visFNN(fnn, pp_type = 0): # preprocess mode: 0-norm 1-stand
     plt.pcolormesh(cord_y,cord_x,mapvalue, cmap = "plasma", shading='auto')
     plt.colorbar()
     #plt.show()
-    plt.savefig('heatmap.png', bbox_inches='tight')
+    figname = 'heatmap_full_' + ranstr(5) + '.png'
+    plt.savefig(figname, bbox_inches='tight')
 
 def visFNN_small(fnn, pp_type = 0):
 # range of the visualization (interests)
@@ -104,8 +108,12 @@ def visFNN_small(fnn, pp_type = 0):
     plt.pcolormesh(cord_y,cord_x,mapvalue, cmap = "plasma", shading='auto')
     plt.colorbar()
     #plt.show()
-    plt.savefig('heatmap_small.png', bbox_inches='tight')
+    figname = 'heatmap_small_' + ranstr(5) + '.png'
+    plt.savefig(figname, bbox_inches='tight')
 
+def ranstr(num):
+    salt = ''.join(random.sample(string.ascii_letters + string.digits, num))
+    return salt
 
 # FILE_NAME = "GPS-power.dat"
 # f = open(FILE_NAME, "r")

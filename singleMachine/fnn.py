@@ -9,7 +9,7 @@ import myUtils
 EPOCH_NUM = 10
 TRAIN_PATH = "GPS-power.dat"
 LOSS_PRINT_PER = 500
-PRE_PROC_TYPE = 1   # 0-norm 1-stand
+PRE_PROC_TYPE = 1   # data preprocess 0-norm 1-stand
 
 class FNN(nn.Module):
 
@@ -90,6 +90,6 @@ for epoch in range(EPOCH_NUM):
 #     print(paras)
 
 print("Training done!")
-myUtils.visFNN(fnn)
-myUtils.visFNN_small(fnn)
+myUtils.visFNN(fnn, PRE_PROC_TYPE)
+myUtils.visFNN_small(fnn, PRE_PROC_TYPE)
 print("Heatmap generated!")
