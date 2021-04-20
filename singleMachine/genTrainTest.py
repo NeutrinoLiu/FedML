@@ -3,12 +3,22 @@ import os
 import json
 import math
 import myUtils 
+import sys
 
 FULL_PATH = "GPS-power.dat"
 TRAIN_PATH = "spectrum/train/spectrum500_train.json"
 TEST_PATH = "spectrum/test/spectrum500_test.json"
 TEST_PERCENTAGE = 0.1
-CLIENT_NUM = 10 
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1 :
+        if int(sys.argv[1]) > 1 :
+            CLIENT_NUM = int(sys.argv[1])
+    else:
+        CLIENT_NUM = 10 # default is 10 worker
+        # NOTICE: now you DO NOT need to change CLIENT_NUM in this file, it is directly passed by shell argument
+
+print(f"[DataSet Generator]\tthere will be {CLIENT_NUM} client devices")
 
 def genJson(dataSet,targetPath):
     if not os.path.exists(os.path.dirname(targetPath)):
