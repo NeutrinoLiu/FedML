@@ -6,7 +6,7 @@ import torch.optim as optim
 
 import myUtils
 
-EPOCH_NUM = 10
+EPOCH_NUM = 100
 TRAIN_PATH = "GPS-power.dat"
 LOSS_PRINT_PER = 500
 PRE_PROC_TYPE = 1   # data preprocess 0-norm 1-stand
@@ -16,17 +16,17 @@ class FNN(nn.Module):
     # parameter-related operation is defined in init as nn
     def __init__(self):
         super(FNN, self).__init__()
-        # input of network is a size2 feature(latitude, longitude)
-        self.hl1 = nn.Linear(2,50)  # hiddenlayer 1 
+        # input of network is a 2-dimensional feature(latitude, longitude)
+        self.il = nn.Linear(2,50)  # inputlayer 
+        self.hl1 = nn.Linear(50,50) # hiddenlayer 1
         self.hl2 = nn.Linear(50,50) # hiddenlayer 2
-        self.hl3 = nn.Linear(50,50) # hiddenlayer 3
         self.ol = nn.Linear(50,1)   # outputlayer
 
     # parameter-irrelative operation is recommended as function
-    def forward(self, x): # x is the size2 input
+    def forward(self, x): # input x is the 2-dimensional spatial coordinates
+        x = F.relu(self.il(x))
         x = F.relu(self.hl1(x))
         x = F.relu(self.hl2(x))
-        x = F.relu(self.hl3(x))
         x = self.ol(x)
         return x
 
@@ -80,11 +80,14 @@ for epoch in range(EPOCH_NUM):
         optimizer.step()
 
         avg_loss_per += loss.item()
+        """
         if i % LOSS_PRINT_PER == LOSS_PRINT_PER-1:
             avg_loss_per = avg_loss_per/LOSS_PRINT_PER
             print(f"[epoch {epoch+1}]\t[avg loss for {LOSS_PRINT_PER} batches before {i+1}]\t{avg_loss_per}\t({myUtils.de_proc(avg_loss_per, PRE_PROC_TYPE)})")
             # print(f"groundTruth is {truth}, prediction is {outputs} ")
             avg_loss_per = 0.0
+        """
+    print(f"[epoch {epoch+1}]\t[avg loss]\t{avg_loss_per/i}\t({myUtils.de_proc(avg_loss_per/i, PRE_PROC_TYPE)})")
 
 # for paras in fnn.named_parameters():
 #     print(paras)
