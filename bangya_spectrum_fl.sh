@@ -3,7 +3,7 @@
 wandb login b8de1ba7e50c8756b94a6ca7497e8e50b6c25830
 
 GPU=0           # whether enable gpu
-CLIENT_NUM=20   # total num of client
+CLIENT_NUM=10   # total num of client
 WORKER_NUM=10   # receive how many local weights each round
 BATCH_SIZE=10   # batch size
 DATASET="spectrum_gps"
