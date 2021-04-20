@@ -1,6 +1,6 @@
+
 # trainning visulization at https://wandb.ai/neutrinoliu/fedml_spectrum
 wandb login b8de1ba7e50c8756b94a6ca7497e8e50b6c25830
-
 
 GPU=0           # whether enable gpu
 CLIENT_NUM=10   # total num of client
