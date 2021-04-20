@@ -2,6 +2,7 @@ import random
 import os
 import json
 import math
+import myUtils 
 
 FULL_PATH = "GPS-power.dat"
 TRAIN_PATH = "spectrum/train/spectrum500_train.json"
@@ -26,8 +27,9 @@ def genJson(dataSet,targetPath):
         local_x = []
         local_y = []
         for row in subset:
-            local_x += [list(map(float, row.split(' ')[0:2]))]
-            local_y += [[float(row.split(' ')[2])]]
+            local_x += [[myUtils.ux(float(row.split(' ')[0])), \
+                         myUtils.uy(float(row.split(' ')[1]))]]
+            local_y += [[myUtils.uz(float(row.split(' ')[2]))]]
         all_x += [local_x]
         all_y += [local_y]
     

@@ -22,31 +22,31 @@ ze = -27.31659193737493
 zavg = -58.52785514280172
 zsd = 7.434576197607559
 
-def ux(raw, type = 0):
+def ux(raw, type = 1):
     if type == 1:   
         return (raw - xavg) / xsd
     else:
         return (raw - xs) / (xe - xs) * 2 -1
 
-def uy(raw, type = 0):
+def uy(raw, type = 1):
     if type == 1:   
         return (raw - yavg) / ysd
     else:
         return (raw - ys) / (ye - ys) * 2 -1
         
-def uz(raw, type = 0):
+def uz(raw, type = 1):
     if type == 1:   
         return (raw - zavg) / zsd
     else:
         return (raw - zs) / (ze - zs) * 2 -1
 
-def de_uz(raw, type = 0):
+def de_uz(raw, type = 1):
     if type == 1:
         return raw * zsd + zavg
     else:
         return (raw +1)/ 2 * (ze - zs) + zs
 
-def de_proc(loss, type = 0):
+def de_proc(loss, type = 1):
     if type == 1:
         return zsd**2 * loss
     else:
@@ -55,7 +55,7 @@ def de_proc(loss, type = 0):
 resx = 100
 resy = 200
 
-def visFNN(fnn, pp_type = 0): # preprocess mode: 0-norm 1-stand
+def visFNN(fnn, pp_type = 1): # preprocess mode: 0-norm 1-stand
 # range of the visualization (interests)
     xs_in = 42.987581077
     xe_in = 43.158151564
@@ -83,7 +83,7 @@ def visFNN(fnn, pp_type = 0): # preprocess mode: 0-norm 1-stand
     figname = 'heatmap_full_' + ranstr(5) + '.png'
     plt.savefig(figname, bbox_inches='tight')
 
-def visFNN_small(fnn, pp_type = 0):
+def visFNN_small(fnn, pp_type = 1):
 # range of the visualization (interests)
     xs_in = 43.064
     xe_in = 43.076
