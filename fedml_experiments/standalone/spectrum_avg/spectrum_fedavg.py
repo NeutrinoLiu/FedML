@@ -19,8 +19,7 @@ from fedml_api.data_preprocessing.spectrum.data_loader import load_partition_dat
 
 ## model
 from fedml_api.model.linear.lr import LogisticRegression
-
-# TODO: implement model
+# customized model
 from fedml_api.model.spectrum.fnn import FeedforwardNN
 
 ## system
@@ -181,8 +180,8 @@ if __name__ == "__main__":
     logger.info(device)
 
     wandb.init(
-        project="fedml",
-        name="FedAVG-r" + str(args.comm_round) + "-e" + str(args.epochs) + "-lr" + str(args.lr),
+        project="fedml_spectrum",
+        name="FedAVGspectrum-r" + str(args.comm_round) + "-e" + str(args.epochs) + "-lr" + str(args.lr),
         config=args
     )
 
