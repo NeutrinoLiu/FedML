@@ -10,6 +10,8 @@ import wandb
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.getcwd(), "../../../")))
 
+import singleMachine.myUtils as mu
+
 ## data
 from fedml_api.data_preprocessing.spectrum.data_loader import load_partition_data_spectrum
 
@@ -67,7 +69,7 @@ def add_args(parser):
     parser.add_argument('--comm_round', type=int, default=10,
                         help='how many round of communications we shoud use')
 
-    parser.add_argument('--frequency_of_the_test', type=int, default=5,
+    parser.add_argument('--frequency_of_the_test', type=int, default=1,
                         help='the frequency of the algorithms')
 
     parser.add_argument('--gpu', type=int, default=0,
@@ -130,6 +132,8 @@ if __name__ == "__main__":
     logging.basicConfig()
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
+    mpl_logger = logging.getLogger('matplotlib')
+    mpl_logger.setLevel(logging.WARNING)
 
     parser = add_args(argparse.ArgumentParser(description='FedAvg-standalone'))
     args = parser.parse_args()
@@ -162,3 +166,5 @@ if __name__ == "__main__":
     logging.info(model)
     fedavgAPI = FedAvgAPI(dataset, device, args, MyModelTrainer(model))
     fedavgAPI.train()
+    mu.visFNN(model)
+    mu.visFNN_small(model)

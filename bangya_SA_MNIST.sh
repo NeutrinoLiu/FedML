@@ -32,10 +32,10 @@ round() {
 # federated_full_train_acc=$(cat wandb/latest-run/files/wandb-summary.json | python -c "import sys, json; print(json.load(sys.stdin)['Train/Acc'])")
 
 # assert_eq $(round $centralized_full_train_acc 3) $(round $federated_full_train_acc 3)
-# cd ./../../../
 
 cd ./fedml_experiments/standalone/spectrum_avg
-sh run_fedavg_standalone_pytorch.sh 0 10 10 10 spectrum_gps ./../../../data/spectrum fnn_spectrum hetero 10 10 0.001 adam 0
+sh run_fedavg_standalone_pytorch.sh 0 10 10 10 spectrum_gps ./../../../data/spectrum fnn_spectrum hetero 3 3 0.001 adam 0
 
+cd ./../../../
 
 

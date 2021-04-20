@@ -61,6 +61,7 @@ class MyModelTrainer(ModelTrainer):
         model.eval()
 
         metrics = {
+            'test_correct': 0,
             'test_loss': 0,
             'test_total': 0
         }
