@@ -28,8 +28,8 @@ def add_args(parser):
     return a parser added with args required by fit
     """
     # Training settings
-    # parser.add_argument('--model', type=str, default='fnn_spectrum', metavar='N',
-    #                     help='neural network used in training')
+    parser.add_argument('--model', type=str, default='fnn_spectrum', metavar='N',
+                         help='neural network used in training')
 
     parser.add_argument('--dataset', type=str, default='spectrum_gps', metavar='N',
                         help='dataset used for training')

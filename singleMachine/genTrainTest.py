@@ -27,7 +27,7 @@ def genJson(dataSet,targetPath):
         local_y = []
         for row in subset:
             local_x += [list(map(float, row.split(' ')[0:2]))]
-            local_y += [float(row.split(' ')[2])]
+            local_y += [[float(row.split(' ')[2])]]
         all_x += [local_x]
         all_y += [local_y]
     
@@ -51,6 +51,7 @@ fread = open(FULL_PATH, "r")
 fullList = fread.readlines()
 fread.close()
 
+random.seed()
 random.shuffle(fullList)
 
 cutter = round(TEST_PERCENTAGE * len(fullList))

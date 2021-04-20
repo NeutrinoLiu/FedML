@@ -1,4 +1,5 @@
 import torch.nn as nn
+import torch.nn.functional as F
 class FeedforwardNN(nn.Module):
 
     # parameter-related operation is defined in init as nn
