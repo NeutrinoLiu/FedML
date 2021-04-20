@@ -35,6 +35,9 @@ python3 ./spectrum_fedavg.py \
 --client_optimizer $OPT \
 --lr $LR 
 
+echo "loss should mulitiply with 55.27 to retrieve a dB^2 unit"
+echo "all training done! heatmap can be checked at fedml_experiments/standalone/spectrum_avg/"
+
 cd ./../../../
 
 
