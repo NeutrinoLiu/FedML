@@ -144,7 +144,7 @@ if __name__ == "__main__":
 
     wandb.init(
         project="fedml_spectrum",
-        name="FedAVGspectrum-r" + str(args.comm_round) + "-e" + str(args.epochs) + "-lr" + str(args.lr),
+        name="spectrum-r" + str(args.comm_round) + "-e" + str(args.epochs) + "-lr" + str(args.lr) + "-cli" + str(args.client_num_in_total),
         config=args
     )
 

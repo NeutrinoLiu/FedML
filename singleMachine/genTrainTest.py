@@ -2,8 +2,11 @@ import random
 import os
 import json
 import math
-import myUtils 
 import sys
+from functools import reduce
+
+import myUtils 
+
 
 FULL_PATH = "GPS-power.dat"
 TRAIN_PATH = "spectrum/train/spectrum500_train.json"
@@ -26,8 +29,12 @@ def genJson(dataSet,targetPath):
     f = open(targetPath, "w+")
 
     users = [ "uid_"+str(i) for i in range(CLIENT_NUM)]
-    size = math.ceil(len(dataSet) / CLIENT_NUM)
-    xandy = [dataSet[i:i+size] for i in range(0, len(dataSet), size)]
+    size = math.floor(len(dataSet) / CLIENT_NUM)
+    
+    xandy_temp = [dataSet[i:i+size] for i in range(0, len(dataSet), size)]
+    # tackling with truncating 
+    xandy = xandy_temp[:CLIENT_NUM-1]
+    xandy += [reduce(lambda l1,l2: l1+l2, xandy_temp[CLIENT_NUM-1:])]
 
     all_x = []
     all_y = []
@@ -42,7 +49,7 @@ def genJson(dataSet,targetPath):
             local_y += [[myUtils.uz(float(row.split(' ')[2]))]]
         all_x += [local_x]
         all_y += [local_y]
-    
+    # print(f"{size} {len(xandy)} {len(all_x)} {len(all_y)} {len(num)}")
     outputJson = {}
     outputJson["num_samples"] = num
     outputJson["users"] = users
