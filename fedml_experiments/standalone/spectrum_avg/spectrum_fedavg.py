@@ -31,6 +31,10 @@ def add_args(parser):
     return a parser added with args required by fit
     """
     # Training settings
+
+    parser.add_argument('--alpha', type=float, default=1, metavar='N',
+                         help='alpha parameter for mixing global weight between gens')
+
     parser.add_argument('--model', type=str, default='fnn_spectrum', metavar='N',
                          help='neural network used in training')
 
@@ -78,6 +82,10 @@ def add_args(parser):
 
     parser.add_argument('--ci', type=int, default=0,
                         help='CI')
+
+    parser.add_argument('--rand', type=int, default=0,
+                        help='real random?')
+    
     return parser
 
 # read json dataset 
@@ -144,13 +152,16 @@ if __name__ == "__main__":
 
     wandb.init(
         project="fedml_spectrum",
-        name="spectrum-r" + str(args.comm_round) + "-e" + str(args.epochs) + "-lr" + str(args.lr) + "-cli" + str(args.client_num_in_total),
+        name="spectrum-r" + str(args.comm_round) + "-e" + str(args.epochs) + "-lr" + str(args.lr) + "-cli" + str(args.client_num_in_total) + "-alpha" + str(args.alpha),
         config=args
     )
 
     # Set the random seed. The np.random seed determines the dataset partition.
     # The torch_manual_seed determines the initial weight.
-    rseed  = round (time.time())
+    if args.rand == 1:
+        rseed = round(time.time())
+    else:
+        rseed = 524287
     random.seed(rseed)
     np.random.seed(rseed)
     torch.manual_seed(rseed)

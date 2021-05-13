@@ -66,7 +66,8 @@ class FedAvgAPI(object):
                 w_locals.append((client.get_sample_number(), copy.deepcopy(w)))
 
             # update global weights
-            w_global = self._aggregate(w_locals)
+            # w_global = self._aggregate(w_locals)
+            w_global = self._aggregate_mix(w_locals, w_global)
             self.model_trainer.set_model_params(w_global)
 
             # test results
@@ -112,6 +113,25 @@ class FedAvgAPI(object):
                     averaged_params[k] = local_model_params[k] * w
                 else:
                     averaged_params[k] += local_model_params[k] * w
+        return averaged_params
+
+    def _aggregate_mix(self, w_locals, w_global):
+        alpha = self.args.alpha
+        training_num = 0
+        for idx in range(len(w_locals)):
+            (sample_num, averaged_params) = w_locals[idx]
+            training_num += sample_num
+
+        (sample_num, averaged_params) = w_locals[0]
+        for k in averaged_params.keys():
+            for i in range(0, len(w_locals)):
+                local_sample_number, local_model_params = w_locals[i]
+                w = local_sample_number / training_num
+                if i == 0:
+                    averaged_params[k] = local_model_params[k] * w
+                else:
+                    averaged_params[k] += local_model_params[k] * w
+            averaged_params[k] = (1-alpha) * w_global[k] + alpha * averaged_params[k]
         return averaged_params
 
     def _local_test_on_all_clients(self, round_idx):
